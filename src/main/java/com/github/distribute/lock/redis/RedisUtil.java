@@ -31,12 +31,12 @@ public class RedisUtil {
 			String ip = "10.75.202.11";
 			int port = 6379;
 			JedisPoolConfig config = new JedisPoolConfig();
-			// æ§åˆ¶ä¸€ä¸ªpoolå¯åˆ†é…å¤šå°‘ä¸ªjediså®ä¾‹ï¼Œé€šè¿‡pool.getResource()æ¥è·å–ï¼›
-			// å¦‚æœèµ‹å€¼ä¸º-1ï¼Œåˆ™è¡¨ç¤ºä¸é™åˆ¶ï¼›å¦‚æœpoolå·²ç»åˆ†é…äº†maxActiveä¸ªjediså®ä¾‹ï¼Œåˆ™æ­¤æ—¶poolçš„çŠ¶æ€ä¸ºexhausted(è€—å°½)ã€‚
+			// ¿ØÖÆÒ»¸öpool¿É·ÖÅä¶àÉÙ¸öjedisÊµÀı£¬Í¨¹ıpool.getResource()À´»ñÈ¡£»
+			// Èç¹û¸³ÖµÎª-1£¬Ôò±íÊ¾²»ÏŞÖÆ£»Èç¹ûpoolÒÑ¾­·ÖÅäÁËmaxActive¸öjedisÊµÀı£¬Ôò´ËÊ±poolµÄ×´Ì¬Îªexhausted(ºÄ¾¡)¡£
 			config.setMaxTotal(10000);
-			// æ§åˆ¶ä¸€ä¸ªpoolæœ€å¤šæœ‰å¤šå°‘ä¸ªçŠ¶æ€ä¸ºidle(ç©ºé—²çš„)çš„jediså®ä¾‹ã€‚
+			// ¿ØÖÆÒ»¸öpool×î¶àÓĞ¶àÉÙ¸ö×´Ì¬Îªidle(¿ÕÏĞµÄ)µÄjedisÊµÀı¡£
 			config.setMaxIdle(2000);
-			// è¡¨ç¤ºå½“borrow(å¼•å…¥)ä¸€ä¸ªjediså®ä¾‹æ—¶ï¼Œæœ€å¤§çš„ç­‰å¾…æ—¶é—´ï¼Œå¦‚æœè¶…è¿‡ç­‰å¾…æ—¶é—´ï¼Œåˆ™ç›´æ¥æŠ›å‡ºJedisConnectionExceptionï¼›
+			// ±íÊ¾µ±borrow(ÒıÈë)Ò»¸öjedisÊµÀıÊ±£¬×î´óµÄµÈ´ıÊ±¼ä£¬Èç¹û³¬¹ıµÈ´ıÊ±¼ä£¬ÔòÖ±½ÓÅ×³öJedisConnectionException£»
 			config.setMaxWaitMillis(1000 * 100);
 			config.setTestOnBorrow(true);
 			pool = new JedisPool(config, ip, port, 100000);
@@ -55,14 +55,14 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–å‚¨å­˜åœ¨redisä¸­çš„value
+	 * Í¨¹ıkey»ñÈ¡´¢´æÔÚredisÖĞµÄvalue
 	 * </p>
 	 * <p>
-	 * å¹¶é‡Šæ”¾è¿æ¥
+	 * ²¢ÊÍ·ÅÁ¬½Ó
 	 * </p>
 	 * 
 	 * @param key
-	 * @return æˆåŠŸè¿”å›value å¤±è´¥è¿”å›null
+	 * @return ³É¹¦·µ»Øvalue Ê§°Ü·µ»Ønull
 	 */
 	public String get(String key) {
 		Jedis jedis = null;
@@ -80,15 +80,15 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * å‘rediså­˜å…¥keyå’Œvalue,å¹¶é‡Šæ”¾è¿æ¥èµ„æº
+	 * Ïòredis´æÈëkeyºÍvalue,²¢ÊÍ·ÅÁ¬½Ó×ÊÔ´
 	 * </p>
 	 * <p>
-	 * å¦‚æœkeyå·²ç»å­˜åœ¨ åˆ™è¦†ç›–
+	 * Èç¹ûkeyÒÑ¾­´æÔÚ Ôò¸²¸Ç
 	 * </p>
 	 * 
 	 * @param key
 	 * @param value
-	 * @return æˆåŠŸ è¿”å›OK å¤±è´¥è¿”å› 0
+	 * @return ³É¹¦ ·µ»ØOK Ê§°Ü·µ»Ø 0
 	 */
 	public String set(String key, String value) {
 		Jedis jedis = null;
@@ -106,12 +106,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * åˆ é™¤æŒ‡å®šçš„key,ä¹Ÿå¯ä»¥ä¼ å…¥ä¸€ä¸ªåŒ…å«keyçš„æ•°ç»„
+	 * É¾³ıÖ¸¶¨µÄkey,Ò²¿ÉÒÔ´«ÈëÒ»¸ö°üº¬keyµÄÊı×é
 	 * </p>
 	 * 
 	 * @param keys
-	 *            ä¸€ä¸ªkey ä¹Ÿå¯ä»¥ä½¿ string æ•°ç»„
-	 * @return è¿”å›åˆ é™¤æˆåŠŸçš„ä¸ªæ•°
+	 *            Ò»¸ökey Ò²¿ÉÒÔÊ¹ string Êı×é
+	 * @return ·µ»ØÉ¾³ı³É¹¦µÄ¸öÊı
 	 */
 	public Long del(String... keys) {
 		Jedis jedis = null;
@@ -129,12 +129,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyå‘æŒ‡å®šçš„valueå€¼è¿½åŠ å€¼
+	 * Í¨¹ıkeyÏòÖ¸¶¨µÄvalueÖµ×·¼ÓÖµ
 	 * </p>
 	 * 
 	 * @param key
 	 * @param str
-	 * @return æˆåŠŸè¿”å› æ·»åŠ åvalueçš„é•¿åº¦ å¤±è´¥ è¿”å› æ·»åŠ çš„ value çš„é•¿åº¦ å¼‚å¸¸è¿”å›0L
+	 * @return ³É¹¦·µ»Ø Ìí¼ÓºóvalueµÄ³¤¶È Ê§°Ü ·µ»Ø Ìí¼ÓµÄ value µÄ³¤¶È Òì³£·µ»Ø0L
 	 */
 	public Long append(String key, String str) {
 		Jedis jedis = null;
@@ -154,7 +154,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * åˆ¤æ–­keyæ˜¯å¦å­˜åœ¨
+	 * ÅĞ¶ÏkeyÊÇ·ñ´æÔÚ
 	 * </p>
 	 * 
 	 * @param key
@@ -176,12 +176,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * è®¾ç½®key value,å¦‚æœkeyå·²ç»å­˜åœ¨åˆ™è¿”å›0,nx==> not exist
+	 * ÉèÖÃkey value,Èç¹ûkeyÒÑ¾­´æÔÚÔò·µ»Ø0,nx==> not exist
 	 * </p>
 	 * 
 	 * @param key
 	 * @param value
-	 * @return æˆåŠŸè¿”å›1 å¦‚æœå­˜åœ¨ å’Œ å‘ç”Ÿå¼‚å¸¸ è¿”å› 0
+	 * @return ³É¹¦·µ»Ø1 Èç¹û´æÔÚ ºÍ ·¢ÉúÒì³£ ·µ»Ø 0
 	 */
 	public Long setnx(String key, String value) {
 		Jedis jedis = null;
@@ -199,14 +199,14 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * è®¾ç½®key valueå¹¶åˆ¶å®šè¿™ä¸ªé”®å€¼çš„æœ‰æ•ˆæœŸ
+	 * ÉèÖÃkey value²¢ÖÆ¶¨Õâ¸ö¼üÖµµÄÓĞĞ§ÆÚ
 	 * </p>
 	 * 
 	 * @param key
 	 * @param value
 	 * @param seconds
-	 *            å•ä½:ç§’
-	 * @return æˆåŠŸè¿”å›OK å¤±è´¥å’Œå¼‚å¸¸è¿”å›null
+	 *            µ¥Î»:Ãë
+	 * @return ³É¹¦·µ»ØOK Ê§°ÜºÍÒì³£·µ»Ønull
 	 */
 	public String setex(String key, String value, int seconds) {
 		Jedis jedis = null;
@@ -225,13 +225,13 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡key å’Œoffset ä»æŒ‡å®šçš„ä½ç½®å¼€å§‹å°†åŸå…ˆvalueæ›¿æ¢
+	 * Í¨¹ıkey ºÍoffset ´ÓÖ¸¶¨µÄÎ»ÖÃ¿ªÊ¼½«Ô­ÏÈvalueÌæ»»
 	 * </p>
 	 * <p>
-	 * ä¸‹æ ‡ä»0å¼€å§‹,offsetè¡¨ç¤ºä»offsetä¸‹æ ‡å¼€å§‹æ›¿æ¢
+	 * ÏÂ±ê´Ó0¿ªÊ¼,offset±íÊ¾´ÓoffsetÏÂ±ê¿ªÊ¼Ìæ»»
 	 * </p>
 	 * <p>
-	 * å¦‚æœæ›¿æ¢çš„å­—ç¬¦ä¸²é•¿åº¦è¿‡å°åˆ™ä¼šè¿™æ ·
+	 * Èç¹ûÌæ»»µÄ×Ö·û´®³¤¶È¹ıĞ¡Ôò»áÕâÑù
 	 * </p>
 	 * <p>
 	 * example:
@@ -243,7 +243,7 @@ public class RedisUtil {
 	 * str : abc
 	 * </p>
 	 * <P>
-	 * ä»ä¸‹æ ‡7å¼€å§‹æ›¿æ¢ åˆ™ç»“æœä¸º
+	 * ´ÓÏÂ±ê7¿ªÊ¼Ìæ»» Ôò½á¹ûÎª
 	 * </p>
 	 * <p>
 	 * RES : bigsea.abc.cn
@@ -252,8 +252,8 @@ public class RedisUtil {
 	 * @param key
 	 * @param str
 	 * @param offset
-	 *            ä¸‹æ ‡ä½ç½®
-	 * @return è¿”å›æ›¿æ¢å value çš„é•¿åº¦
+	 *            ÏÂ±êÎ»ÖÃ
+	 * @return ·µ»ØÌæ»»ºó value µÄ³¤¶È
 	 */
 	public Long setrange(String key, String str, int offset) {
 		Jedis jedis = null;
@@ -271,12 +271,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡æ‰¹é‡çš„keyè·å–æ‰¹é‡çš„value
+	 * Í¨¹ıÅúÁ¿µÄkey»ñÈ¡ÅúÁ¿µÄvalue
 	 * </p>
 	 * 
 	 * @param keys
-	 *            stringæ•°ç»„ ä¹Ÿå¯ä»¥æ˜¯ä¸€ä¸ªkey
-	 * @return æˆåŠŸè¿”å›valueçš„é›†åˆ, å¤±è´¥è¿”å›nullçš„é›†åˆ ,å¼‚å¸¸è¿”å›ç©º
+	 *            stringÊı×é Ò²¿ÉÒÔÊÇÒ»¸ökey
+	 * @return ³É¹¦·µ»ØvalueµÄ¼¯ºÏ, Ê§°Ü·µ»ØnullµÄ¼¯ºÏ ,Òì³£·µ»Ø¿Õ
 	 */
 	public List<String> mget(String... keys) {
 		Jedis jedis = null;
@@ -295,7 +295,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * æ‰¹é‡çš„è®¾ç½®key:value,å¯ä»¥ä¸€ä¸ª
+	 * ÅúÁ¿µÄÉèÖÃkey:value,¿ÉÒÔÒ»¸ö
 	 * </p>
 	 * <p>
 	 * example:
@@ -305,7 +305,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param keysvalues
-	 * @return æˆåŠŸè¿”å›OK å¤±è´¥ å¼‚å¸¸ è¿”å› null
+	 * @return ³É¹¦·µ»ØOK Ê§°Ü Òì³£ ·µ»Ø null
 	 *
 	 */
 	public String mset(String... keysvalues) {
@@ -325,7 +325,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * æ‰¹é‡çš„è®¾ç½®key:value,å¯ä»¥ä¸€ä¸ª,å¦‚æœkeyå·²ç»å­˜åœ¨åˆ™ä¼šå¤±è´¥,æ“ä½œä¼šå›æ»š
+	 * ÅúÁ¿µÄÉèÖÃkey:value,¿ÉÒÔÒ»¸ö,Èç¹ûkeyÒÑ¾­´æÔÚÔò»áÊ§°Ü,²Ù×÷»á»Ø¹ö
 	 * </p>
 	 * <p>
 	 * example:
@@ -335,7 +335,7 @@ public class RedisUtil {
 	 * </p>
 	 * 
 	 * @param keysvalues
-	 * @return æˆåŠŸè¿”å›1 å¤±è´¥è¿”å›0
+	 * @return ³É¹¦·µ»Ø1 Ê§°Ü·µ»Ø0
 	 */
 	public Long msetnx(String... keysvalues) {
 		Jedis jedis = null;
@@ -354,12 +354,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * è®¾ç½®keyçš„å€¼,å¹¶è¿”å›ä¸€ä¸ªæ—§å€¼
+	 * ÉèÖÃkeyµÄÖµ,²¢·µ»ØÒ»¸ö¾ÉÖµ
 	 * </p>
 	 * 
 	 * @param key
 	 * @param value
-	 * @return æ—§å€¼ å¦‚æœkeyä¸å­˜åœ¨ åˆ™è¿”å›null
+	 * @return ¾ÉÖµ Èç¹ûkey²»´æÔÚ Ôò·µ»Ønull
 	 */
 	public String getset(String key, String value) {
 		Jedis jedis = null;
@@ -378,14 +378,14 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡ä¸‹æ ‡ å’Œkey è·å–æŒ‡å®šä¸‹æ ‡ä½ç½®çš„ value
+	 * Í¨¹ıÏÂ±ê ºÍkey »ñÈ¡Ö¸¶¨ÏÂ±êÎ»ÖÃµÄ value
 	 * </p>
 	 * 
 	 * @param key
 	 * @param startOffset
-	 *            å¼€å§‹ä½ç½® ä»0 å¼€å§‹ è´Ÿæ•°è¡¨ç¤ºä»å³è¾¹å¼€å§‹æˆªå–
+	 *            ¿ªÊ¼Î»ÖÃ ´Ó0 ¿ªÊ¼ ¸ºÊı±íÊ¾´ÓÓÒ±ß¿ªÊ¼½ØÈ¡
 	 * @param endOffset
-	 * @return å¦‚æœæ²¡æœ‰è¿”å›null
+	 * @return Èç¹ûÃ»ÓĞ·µ»Ønull
 	 */
 	public String getrange(String key, int startOffset, int endOffset) {
 		Jedis jedis = null;
@@ -404,11 +404,11 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡key å¯¹valueè¿›è¡ŒåŠ å€¼+1æ“ä½œ,å½“valueä¸æ˜¯intç±»å‹æ—¶ä¼šè¿”å›é”™è¯¯,å½“keyä¸å­˜åœ¨æ˜¯åˆ™valueä¸º1
+	 * Í¨¹ıkey ¶Ôvalue½øĞĞ¼ÓÖµ+1²Ù×÷,µ±value²»ÊÇintÀàĞÍÊ±»á·µ»Ø´íÎó,µ±key²»´æÔÚÊÇÔòvalueÎª1
 	 * </p>
 	 * 
 	 * @param key
-	 * @return åŠ å€¼åçš„ç»“æœ
+	 * @return ¼ÓÖµºóµÄ½á¹û
 	 */
 	public Long incr(String key) {
 		Jedis jedis = null;
@@ -427,7 +427,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyç»™æŒ‡å®šçš„valueåŠ å€¼,å¦‚æœkeyä¸å­˜åœ¨,åˆ™è¿™æ˜¯valueä¸ºè¯¥å€¼
+	 * Í¨¹ıkey¸øÖ¸¶¨µÄvalue¼ÓÖµ,Èç¹ûkey²»´æÔÚ,ÔòÕâÊÇvalueÎª¸ÃÖµ
 	 * </p>
 	 * 
 	 * @param key
@@ -451,7 +451,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * å¯¹keyçš„å€¼åšå‡å‡æ“ä½œ,å¦‚æœkeyä¸å­˜åœ¨,åˆ™è®¾ç½®keyä¸º-1
+	 * ¶ÔkeyµÄÖµ×ö¼õ¼õ²Ù×÷,Èç¹ûkey²»´æÔÚ,ÔòÉèÖÃkeyÎª-1
 	 * </p>
 	 * 
 	 * @param key
@@ -474,7 +474,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * å‡å»æŒ‡å®šçš„å€¼
+	 * ¼õÈ¥Ö¸¶¨µÄÖµ
 	 * </p>
 	 * 
 	 * @param key
@@ -498,11 +498,11 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–valueå€¼çš„é•¿åº¦
+	 * Í¨¹ıkey»ñÈ¡valueÖµµÄ³¤¶È
 	 * </p>
 	 * 
 	 * @param key
-	 * @return å¤±è´¥è¿”å›null
+	 * @return Ê§°Ü·µ»Ønull
 	 */
 	public Long serlen(String key) {
 		Jedis jedis = null;
@@ -521,14 +521,14 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyç»™fieldè®¾ç½®æŒ‡å®šçš„å€¼,å¦‚æœkeyä¸å­˜åœ¨,åˆ™å…ˆåˆ›å»º
+	 * Í¨¹ıkey¸øfieldÉèÖÃÖ¸¶¨µÄÖµ,Èç¹ûkey²»´æÔÚ,ÔòÏÈ´´½¨
 	 * </p>
 	 * 
 	 * @param key
 	 * @param field
-	 *            å­—æ®µ
+	 *            ×Ö¶Î
 	 * @param value
-	 * @return å¦‚æœå­˜åœ¨è¿”å›0 å¼‚å¸¸è¿”å›null
+	 * @return Èç¹û´æÔÚ·µ»Ø0 Òì³£·µ»Ønull
 	 */
 	public Long hset(String key, String field, String value) {
 		Jedis jedis = null;
@@ -547,7 +547,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyç»™fieldè®¾ç½®æŒ‡å®šçš„å€¼,å¦‚æœkeyä¸å­˜åœ¨åˆ™å…ˆåˆ›å»º,å¦‚æœfieldå·²ç»å­˜åœ¨,è¿”å›0
+	 * Í¨¹ıkey¸øfieldÉèÖÃÖ¸¶¨µÄÖµ,Èç¹ûkey²»´æÔÚÔòÏÈ´´½¨,Èç¹ûfieldÒÑ¾­´æÔÚ,·µ»Ø0
 	 * </p>
 	 * 
 	 * @param key
@@ -572,12 +572,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyåŒæ—¶è®¾ç½® hashçš„å¤šä¸ªfield
+	 * Í¨¹ıkeyÍ¬Ê±ÉèÖÃ hashµÄ¶à¸öfield
 	 * </p>
 	 * 
 	 * @param key
 	 * @param hash
-	 * @return è¿”å›OK å¼‚å¸¸è¿”å›null
+	 * @return ·µ»ØOK Òì³£·µ»Ønull
 	 */
 	public String hmset(String key, Map<String, String> hash) {
 		Jedis jedis = null;
@@ -596,12 +596,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡key å’Œ field è·å–æŒ‡å®šçš„ value
+	 * Í¨¹ıkey ºÍ field »ñÈ¡Ö¸¶¨µÄ value
 	 * </p>
 	 * 
 	 * @param key
 	 * @param field
-	 * @return æ²¡æœ‰è¿”å›null
+	 * @return Ã»ÓĞ·µ»Ønull
 	 */
 	public String hget(String key, String field) {
 		Jedis jedis = null;
@@ -620,12 +620,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡key å’Œ fields è·å–æŒ‡å®šçš„value å¦‚æœæ²¡æœ‰å¯¹åº”çš„valueåˆ™è¿”å›null
+	 * Í¨¹ıkey ºÍ fields »ñÈ¡Ö¸¶¨µÄvalue Èç¹ûÃ»ÓĞ¶ÔÓ¦µÄvalueÔò·µ»Ønull
 	 * </p>
 	 * 
 	 * @param key
 	 * @param fields
-	 *            å¯ä»¥ä½¿ ä¸€ä¸ªString ä¹Ÿå¯ä»¥æ˜¯ Stringæ•°ç»„
+	 *            ¿ÉÒÔÊ¹ Ò»¸öString Ò²¿ÉÒÔÊÇ StringÊı×é
 	 * @return
 	 */
 	public List<String> hmget(String key, String... fields) {
@@ -645,7 +645,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyç»™æŒ‡å®šçš„fieldçš„valueåŠ ä¸Šç»™å®šçš„å€¼
+	 * Í¨¹ıkey¸øÖ¸¶¨µÄfieldµÄvalue¼ÓÉÏ¸ø¶¨µÄÖµ
 	 * </p>
 	 * 
 	 * @param key
@@ -670,7 +670,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyå’Œfieldåˆ¤æ–­æ˜¯å¦æœ‰æŒ‡å®šçš„valueå­˜åœ¨
+	 * Í¨¹ıkeyºÍfieldÅĞ¶ÏÊÇ·ñÓĞÖ¸¶¨µÄvalue´æÔÚ
 	 * </p>
 	 * 
 	 * @param key
@@ -694,7 +694,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›fieldçš„æ•°é‡
+	 * Í¨¹ıkey·µ»ØfieldµÄÊıÁ¿
 	 * </p>
 	 * 
 	 * @param key
@@ -718,12 +718,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡key åˆ é™¤æŒ‡å®šçš„ field
+	 * Í¨¹ıkey É¾³ıÖ¸¶¨µÄ field
 	 * </p>
 	 * 
 	 * @param key
 	 * @param fields
-	 *            å¯ä»¥æ˜¯ ä¸€ä¸ª field ä¹Ÿå¯ä»¥æ˜¯ ä¸€ä¸ªæ•°ç»„
+	 *            ¿ÉÒÔÊÇ Ò»¸ö field Ò²¿ÉÒÔÊÇ Ò»¸öÊı×é
 	 * @return
 	 */
 	public Long hdel(String key, String... fields) {
@@ -743,7 +743,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›æ‰€æœ‰çš„field
+	 * Í¨¹ıkey·µ»ØËùÓĞµÄfield
 	 * </p>
 	 * 
 	 * @param key
@@ -766,7 +766,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›æ‰€æœ‰å’Œkeyæœ‰å…³çš„value
+	 * Í¨¹ıkey·µ»ØËùÓĞºÍkeyÓĞ¹ØµÄvalue
 	 * </p>
 	 * 
 	 * @param key
@@ -789,7 +789,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–æ‰€æœ‰çš„fieldå’Œvalue
+	 * Í¨¹ıkey»ñÈ¡ËùÓĞµÄfieldºÍvalue
 	 * </p>
 	 * 
 	 * @param key
@@ -811,13 +811,13 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyå‘listå¤´éƒ¨æ·»åŠ å­—ç¬¦ä¸²
+	 * Í¨¹ıkeyÏòlistÍ·²¿Ìí¼Ó×Ö·û´®
 	 * </p>
 	 * 
 	 * @param key
 	 * @param strs
-	 *            å¯ä»¥ä½¿ä¸€ä¸ªstring ä¹Ÿå¯ä»¥ä½¿stringæ•°ç»„
-	 * @return è¿”å›listçš„valueä¸ªæ•°
+	 *            ¿ÉÒÔÊ¹Ò»¸östring Ò²¿ÉÒÔÊ¹stringÊı×é
+	 * @return ·µ»ØlistµÄvalue¸öÊı
 	 */
 	public Long lpush(String key, String... strs) {
 		Jedis jedis = null;
@@ -836,13 +836,13 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyå‘listå°¾éƒ¨æ·»åŠ å­—ç¬¦ä¸²
+	 * Í¨¹ıkeyÏòlistÎ²²¿Ìí¼Ó×Ö·û´®
 	 * </p>
 	 * 
 	 * @param key
 	 * @param strs
-	 *            å¯ä»¥ä½¿ä¸€ä¸ªstring ä¹Ÿå¯ä»¥ä½¿stringæ•°ç»„
-	 * @return è¿”å›listçš„valueä¸ªæ•°
+	 *            ¿ÉÒÔÊ¹Ò»¸östring Ò²¿ÉÒÔÊ¹stringÊı×é
+	 * @return ·µ»ØlistµÄvalue¸öÊı
 	 */
 	public Long rpush(String key, String... strs) {
 		Jedis jedis = null;
@@ -861,16 +861,16 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyåœ¨listæŒ‡å®šçš„ä½ç½®ä¹‹å‰æˆ–è€…ä¹‹å æ·»åŠ å­—ç¬¦ä¸²å…ƒç´ 
+	 * Í¨¹ıkeyÔÚlistÖ¸¶¨µÄÎ»ÖÃÖ®Ç°»òÕßÖ®ºó Ìí¼Ó×Ö·û´®ÔªËØ
 	 * </p>
 	 * 
 	 * @param key
 	 * @param where
-	 *            LIST_POSITIONæšä¸¾ç±»å‹
+	 *            LIST_POSITIONÃ¶¾ÙÀàĞÍ
 	 * @param pivot
-	 *            listé‡Œé¢çš„value
+	 *            listÀïÃæµÄvalue
 	 * @param value
-	 *            æ·»åŠ çš„value
+	 *            Ìí¼ÓµÄvalue
 	 * @return
 	 */
 	public Long linsert(String key, LIST_POSITION where, String pivot, String value) {
@@ -890,17 +890,17 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè®¾ç½®listæŒ‡å®šä¸‹æ ‡ä½ç½®çš„value
+	 * Í¨¹ıkeyÉèÖÃlistÖ¸¶¨ÏÂ±êÎ»ÖÃµÄvalue
 	 * </p>
 	 * <p>
-	 * å¦‚æœä¸‹æ ‡è¶…è¿‡listé‡Œé¢valueçš„ä¸ªæ•°åˆ™æŠ¥é”™
+	 * Èç¹ûÏÂ±ê³¬¹ılistÀïÃævalueµÄ¸öÊıÔò±¨´í
 	 * </p>
 	 * 
 	 * @param key
 	 * @param index
-	 *            ä»0å¼€å§‹
+	 *            ´Ó0¿ªÊ¼
 	 * @param value
-	 * @return æˆåŠŸè¿”å›OK
+	 * @return ³É¹¦·µ»ØOK
 	 */
 	public String lset(String key, Long index, String value) {
 		Jedis jedis = null;
@@ -919,14 +919,14 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyä»å¯¹åº”çš„listä¸­åˆ é™¤æŒ‡å®šçš„countä¸ª å’Œ valueç›¸åŒçš„å…ƒç´ 
+	 * Í¨¹ıkey´Ó¶ÔÓ¦µÄlistÖĞÉ¾³ıÖ¸¶¨µÄcount¸ö ºÍ valueÏàÍ¬µÄÔªËØ
 	 * </p>
 	 * 
 	 * @param key
 	 * @param count
-	 *            å½“countä¸º0æ—¶åˆ é™¤å…¨éƒ¨
+	 *            µ±countÎª0Ê±É¾³ıÈ«²¿
 	 * @param value
-	 * @return è¿”å›è¢«åˆ é™¤çš„ä¸ªæ•°
+	 * @return ·µ»Ø±»É¾³ıµÄ¸öÊı
 	 */
 	public Long lrem(String key, long count, String value) {
 		Jedis jedis = null;
@@ -945,13 +945,13 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyä¿ç•™listä¸­ä»stratä¸‹æ ‡å¼€å§‹åˆ°endä¸‹æ ‡ç»“æŸçš„valueå€¼
+	 * Í¨¹ıkey±£ÁôlistÖĞ´ÓstratÏÂ±ê¿ªÊ¼µ½endÏÂ±ê½áÊøµÄvalueÖµ
 	 * </p>
 	 * 
 	 * @param key
 	 * @param start
 	 * @param end
-	 * @return æˆåŠŸè¿”å›OK
+	 * @return ³É¹¦·µ»ØOK
 	 */
 	public String ltrim(String key, long start, long end) {
 		Jedis jedis = null;
@@ -970,7 +970,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyä»listçš„å¤´éƒ¨åˆ é™¤ä¸€ä¸ªvalue,å¹¶è¿”å›è¯¥value
+	 * Í¨¹ıkey´ÓlistµÄÍ·²¿É¾³ıÒ»¸övalue,²¢·µ»Ø¸Ãvalue
 	 * </p>
 	 * 
 	 * @param key
@@ -993,7 +993,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyä»listå°¾éƒ¨åˆ é™¤ä¸€ä¸ªvalue,å¹¶è¿”å›è¯¥å…ƒç´ 
+	 * Í¨¹ıkey´ÓlistÎ²²¿É¾³ıÒ»¸övalue,²¢·µ»Ø¸ÃÔªËØ
 	 * </p>
 	 * 
 	 * @param key
@@ -1016,10 +1016,10 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyä»ä¸€ä¸ªlistçš„å°¾éƒ¨åˆ é™¤ä¸€ä¸ªvalueå¹¶æ·»åŠ åˆ°å¦ä¸€ä¸ªlistçš„å¤´éƒ¨,å¹¶è¿”å›è¯¥value
+	 * Í¨¹ıkey´ÓÒ»¸ölistµÄÎ²²¿É¾³ıÒ»¸övalue²¢Ìí¼Óµ½ÁíÒ»¸ölistµÄÍ·²¿,²¢·µ»Ø¸Ãvalue
 	 * </p>
 	 * <p>
-	 * å¦‚æœç¬¬ä¸€ä¸ªlistä¸ºç©ºæˆ–è€…ä¸å­˜åœ¨åˆ™è¿”å›null
+	 * Èç¹ûµÚÒ»¸ölistÎª¿Õ»òÕß²»´æÔÚÔò·µ»Ønull
 	 * </p>
 	 * 
 	 * @param srckey
@@ -1043,12 +1043,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–listä¸­æŒ‡å®šä¸‹æ ‡ä½ç½®çš„value
+	 * Í¨¹ıkey»ñÈ¡listÖĞÖ¸¶¨ÏÂ±êÎ»ÖÃµÄvalue
 	 * </p>
 	 * 
 	 * @param key
 	 * @param index
-	 * @return å¦‚æœæ²¡æœ‰è¿”å›null
+	 * @return Èç¹ûÃ»ÓĞ·µ»Ønull
 	 */
 	public String lindex(String key, long index) {
 		Jedis jedis = null;
@@ -1067,7 +1067,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›listçš„é•¿åº¦
+	 * Í¨¹ıkey·µ»ØlistµÄ³¤¶È
 	 * </p>
 	 * 
 	 * @param key
@@ -1090,10 +1090,10 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–listæŒ‡å®šä¸‹æ ‡ä½ç½®çš„value
+	 * Í¨¹ıkey»ñÈ¡listÖ¸¶¨ÏÂ±êÎ»ÖÃµÄvalue
 	 * </p>
 	 * <p>
-	 * å¦‚æœstart ä¸º 0 end ä¸º -1 åˆ™è¿”å›å…¨éƒ¨çš„listä¸­çš„value
+	 * Èç¹ûstart Îª 0 end Îª -1 Ôò·µ»ØÈ«²¿µÄlistÖĞµÄvalue
 	 * </p>
 	 * 
 	 * @param key
@@ -1118,13 +1118,13 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyå‘æŒ‡å®šçš„setä¸­æ·»åŠ value
+	 * Í¨¹ıkeyÏòÖ¸¶¨µÄsetÖĞÌí¼Óvalue
 	 * </p>
 	 * 
 	 * @param key
 	 * @param members
-	 *            å¯ä»¥æ˜¯ä¸€ä¸ªString ä¹Ÿå¯ä»¥æ˜¯ä¸€ä¸ªStringæ•°ç»„
-	 * @return æ·»åŠ æˆåŠŸçš„ä¸ªæ•°
+	 *            ¿ÉÒÔÊÇÒ»¸öString Ò²¿ÉÒÔÊÇÒ»¸öStringÊı×é
+	 * @return Ìí¼Ó³É¹¦µÄ¸öÊı
 	 */
 	public Long sadd(String key, String... members) {
 		Jedis jedis = null;
@@ -1143,13 +1143,13 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyåˆ é™¤setä¸­å¯¹åº”çš„valueå€¼
+	 * Í¨¹ıkeyÉ¾³ısetÖĞ¶ÔÓ¦µÄvalueÖµ
 	 * </p>
 	 * 
 	 * @param key
 	 * @param members
-	 *            å¯ä»¥æ˜¯ä¸€ä¸ªString ä¹Ÿå¯ä»¥æ˜¯ä¸€ä¸ªStringæ•°ç»„
-	 * @return åˆ é™¤çš„ä¸ªæ•°
+	 *            ¿ÉÒÔÊÇÒ»¸öString Ò²¿ÉÒÔÊÇÒ»¸öStringÊı×é
+	 * @return É¾³ıµÄ¸öÊı
 	 */
 	public Long srem(String key, String... members) {
 		Jedis jedis = null;
@@ -1168,7 +1168,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyéšæœºåˆ é™¤ä¸€ä¸ªsetä¸­çš„valueå¹¶è¿”å›è¯¥å€¼
+	 * Í¨¹ıkeyËæ»úÉ¾³ıÒ»¸ösetÖĞµÄvalue²¢·µ»Ø¸ÃÖµ
 	 * </p>
 	 * 
 	 * @param key
@@ -1191,14 +1191,14 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–setä¸­çš„å·®é›†
+	 * Í¨¹ıkey»ñÈ¡setÖĞµÄ²î¼¯
 	 * </p>
 	 * <p>
-	 * ä»¥ç¬¬ä¸€ä¸ªsetä¸ºæ ‡å‡†
+	 * ÒÔµÚÒ»¸ösetÎª±ê×¼
 	 * </p>
 	 * 
 	 * @param keys
-	 *            å¯ä»¥ä½¿ä¸€ä¸ªstring åˆ™è¿”å›setä¸­æ‰€æœ‰çš„value ä¹Ÿå¯ä»¥æ˜¯stringæ•°ç»„
+	 *            ¿ÉÒÔÊ¹Ò»¸östring Ôò·µ»ØsetÖĞËùÓĞµÄvalue Ò²¿ÉÒÔÊÇstringÊı×é
 	 * @return
 	 */
 	public Set<String> sdiff(String... keys) {
@@ -1218,16 +1218,16 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–setä¸­çš„å·®é›†å¹¶å­˜å…¥åˆ°å¦ä¸€ä¸ªkeyä¸­
+	 * Í¨¹ıkey»ñÈ¡setÖĞµÄ²î¼¯²¢´æÈëµ½ÁíÒ»¸ökeyÖĞ
 	 * </p>
 	 * <p>
-	 * ä»¥ç¬¬ä¸€ä¸ªsetä¸ºæ ‡å‡†
+	 * ÒÔµÚÒ»¸ösetÎª±ê×¼
 	 * </p>
 	 * 
 	 * @param dstkey
-	 *            å·®é›†å­˜å…¥çš„key
+	 *            ²î¼¯´æÈëµÄkey
 	 * @param keys
-	 *            å¯ä»¥ä½¿ä¸€ä¸ªstring åˆ™è¿”å›setä¸­æ‰€æœ‰çš„value ä¹Ÿå¯ä»¥æ˜¯stringæ•°ç»„
+	 *            ¿ÉÒÔÊ¹Ò»¸östring Ôò·µ»ØsetÖĞËùÓĞµÄvalue Ò²¿ÉÒÔÊÇstringÊı×é
 	 * @return
 	 */
 	public Long sdiffstore(String dstkey, String... keys) {
@@ -1247,11 +1247,11 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–æŒ‡å®šsetä¸­çš„äº¤é›†
+	 * Í¨¹ıkey»ñÈ¡Ö¸¶¨setÖĞµÄ½»¼¯
 	 * </p>
 	 * 
 	 * @param keys
-	 *            å¯ä»¥ä½¿ä¸€ä¸ªstring ä¹Ÿå¯ä»¥æ˜¯ä¸€ä¸ªstringæ•°ç»„
+	 *            ¿ÉÒÔÊ¹Ò»¸östring Ò²¿ÉÒÔÊÇÒ»¸östringÊı×é
 	 * @return
 	 */
 	public Set<String> sinter(String... keys) {
@@ -1271,12 +1271,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–æŒ‡å®šsetä¸­çš„äº¤é›† å¹¶å°†ç»“æœå­˜å…¥æ–°çš„setä¸­
+	 * Í¨¹ıkey»ñÈ¡Ö¸¶¨setÖĞµÄ½»¼¯ ²¢½«½á¹û´æÈëĞÂµÄsetÖĞ
 	 * </p>
 	 * 
 	 * @param dstkey
 	 * @param keys
-	 *            å¯ä»¥ä½¿ä¸€ä¸ªstring ä¹Ÿå¯ä»¥æ˜¯ä¸€ä¸ªstringæ•°ç»„
+	 *            ¿ÉÒÔÊ¹Ò»¸östring Ò²¿ÉÒÔÊÇÒ»¸östringÊı×é
 	 * @return
 	 */
 	public Long sinterstore(String dstkey, String... keys) {
@@ -1296,11 +1296,11 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›æ‰€æœ‰setçš„å¹¶é›†
+	 * Í¨¹ıkey·µ»ØËùÓĞsetµÄ²¢¼¯
 	 * </p>
 	 * 
 	 * @param keys
-	 *            å¯ä»¥ä½¿ä¸€ä¸ªstring ä¹Ÿå¯ä»¥æ˜¯ä¸€ä¸ªstringæ•°ç»„
+	 *            ¿ÉÒÔÊ¹Ò»¸östring Ò²¿ÉÒÔÊÇÒ»¸östringÊı×é
 	 * @return
 	 */
 	public Set<String> sunion(String... keys) {
@@ -1320,12 +1320,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›æ‰€æœ‰setçš„å¹¶é›†,å¹¶å­˜å…¥åˆ°æ–°çš„setä¸­
+	 * Í¨¹ıkey·µ»ØËùÓĞsetµÄ²¢¼¯,²¢´æÈëµ½ĞÂµÄsetÖĞ
 	 * </p>
 	 * 
 	 * @param dstkey
 	 * @param keys
-	 *            å¯ä»¥ä½¿ä¸€ä¸ªstring ä¹Ÿå¯ä»¥æ˜¯ä¸€ä¸ªstringæ•°ç»„
+	 *            ¿ÉÒÔÊ¹Ò»¸östring Ò²¿ÉÒÔÊÇÒ»¸östringÊı×é
 	 * @return
 	 */
 	public Long sunionstore(String dstkey, String... keys) {
@@ -1345,15 +1345,15 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyå°†setä¸­çš„valueç§»é™¤å¹¶æ·»åŠ åˆ°ç¬¬äºŒä¸ªsetä¸­
+	 * Í¨¹ıkey½«setÖĞµÄvalueÒÆ³ı²¢Ìí¼Óµ½µÚ¶ş¸ösetÖĞ
 	 * </p>
 	 * 
 	 * @param srckey
-	 *            éœ€è¦ç§»é™¤çš„
+	 *            ĞèÒªÒÆ³ıµÄ
 	 * @param dstkey
-	 *            æ·»åŠ çš„
+	 *            Ìí¼ÓµÄ
 	 * @param member
-	 *            setä¸­çš„value
+	 *            setÖĞµÄvalue
 	 * @return
 	 */
 	public Long smove(String srckey, String dstkey, String member) {
@@ -1373,7 +1373,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–setä¸­valueçš„ä¸ªæ•°
+	 * Í¨¹ıkey»ñÈ¡setÖĞvalueµÄ¸öÊı
 	 * </p>
 	 * 
 	 * @param key
@@ -1396,7 +1396,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyåˆ¤æ–­valueæ˜¯å¦æ˜¯setä¸­çš„å…ƒç´ 
+	 * Í¨¹ıkeyÅĞ¶ÏvalueÊÇ·ñÊÇsetÖĞµÄÔªËØ
 	 * </p>
 	 * 
 	 * @param key
@@ -1420,7 +1420,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–setä¸­éšæœºçš„value,ä¸åˆ é™¤å…ƒç´ 
+	 * Í¨¹ıkey»ñÈ¡setÖĞËæ»úµÄvalue,²»É¾³ıÔªËØ
 	 * </p>
 	 * 
 	 * @param key
@@ -1443,7 +1443,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–setä¸­æ‰€æœ‰çš„value
+	 * Í¨¹ıkey»ñÈ¡setÖĞËùÓĞµÄvalue
 	 * </p>
 	 * 
 	 * @param key
@@ -1466,10 +1466,10 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyå‘zsetä¸­æ·»åŠ value,score,å…¶ä¸­scoreå°±æ˜¯ç”¨æ¥æ’åºçš„
+	 * Í¨¹ıkeyÏòzsetÖĞÌí¼Óvalue,score,ÆäÖĞscore¾ÍÊÇÓÃÀ´ÅÅĞòµÄ
 	 * </p>
 	 * <p>
-	 * å¦‚æœè¯¥valueå·²ç»å­˜åœ¨åˆ™æ ¹æ®scoreæ›´æ–°å…ƒç´ 
+	 * Èç¹û¸ÃvalueÒÑ¾­´æÔÚÔò¸ù¾İscore¸üĞÂÔªËØ
 	 * </p>
 	 * 
 	 * @param key
@@ -1494,12 +1494,12 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyåˆ é™¤åœ¨zsetä¸­æŒ‡å®šçš„value
+	 * Í¨¹ıkeyÉ¾³ıÔÚzsetÖĞÖ¸¶¨µÄvalue
 	 * </p>
 	 * 
 	 * @param key
 	 * @param members
-	 *            å¯ä»¥ä½¿ä¸€ä¸ªstring ä¹Ÿå¯ä»¥æ˜¯ä¸€ä¸ªstringæ•°ç»„
+	 *            ¿ÉÒÔÊ¹Ò»¸östring Ò²¿ÉÒÔÊÇÒ»¸östringÊı×é
 	 * @return
 	 */
 	public Long zrem(String key, String... members) {
@@ -1519,7 +1519,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyå¢åŠ è¯¥zsetä¸­valueçš„scoreçš„å€¼
+	 * Í¨¹ıkeyÔö¼Ó¸ÃzsetÖĞvalueµÄscoreµÄÖµ
 	 * </p>
 	 * 
 	 * @param key
@@ -1544,10 +1544,10 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›zsetä¸­valueçš„æ’å
+	 * Í¨¹ıkey·µ»ØzsetÖĞvalueµÄÅÅÃû
 	 * </p>
 	 * <p>
-	 * ä¸‹æ ‡ä»å°åˆ°å¤§æ’åº
+	 * ÏÂ±ê´ÓĞ¡µ½´óÅÅĞò
 	 * </p>
 	 * 
 	 * @param key
@@ -1571,10 +1571,10 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›zsetä¸­valueçš„æ’å
+	 * Í¨¹ıkey·µ»ØzsetÖĞvalueµÄÅÅÃû
 	 * </p>
 	 * <p>
-	 * ä¸‹æ ‡ä»å¤§åˆ°å°æ’åº
+	 * ÏÂ±ê´Ó´óµ½Ğ¡ÅÅĞò
 	 * </p>
 	 * 
 	 * @param key
@@ -1598,13 +1598,13 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyå°†è·å–scoreä»startåˆ°endä¸­zsetçš„value
+	 * Í¨¹ıkey½«»ñÈ¡score´Óstartµ½endÖĞzsetµÄvalue
 	 * </p>
 	 * <p>
-	 * socreä»å¤§åˆ°å°æ’åº
+	 * socre´Ó´óµ½Ğ¡ÅÅĞò
 	 * </p>
 	 * <p>
-	 * å½“startä¸º0 endä¸º-1æ—¶è¿”å›å…¨éƒ¨
+	 * µ±startÎª0 endÎª-1Ê±·µ»ØÈ«²¿
 	 * </p>
 	 * 
 	 * @param key
@@ -1629,7 +1629,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›æŒ‡å®šscoreå†…zsetä¸­çš„value
+	 * Í¨¹ıkey·µ»ØÖ¸¶¨scoreÄÚzsetÖĞµÄvalue
 	 * </p>
 	 * 
 	 * @param key
@@ -1654,7 +1654,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›æŒ‡å®šscoreå†…zsetä¸­çš„value
+	 * Í¨¹ıkey·µ»ØÖ¸¶¨scoreÄÚzsetÖĞµÄvalue
 	 * </p>
 	 * 
 	 * @param key
@@ -1679,7 +1679,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * è¿”å›æŒ‡å®šåŒºé—´å†…zsetä¸­valueçš„æ•°é‡
+	 * ·µ»ØÖ¸¶¨Çø¼äÄÚzsetÖĞvalueµÄÊıÁ¿
 	 * </p>
 	 * 
 	 * @param key
@@ -1704,7 +1704,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè¿”å›zsetä¸­çš„valueä¸ªæ•°
+	 * Í¨¹ıkey·µ»ØzsetÖĞµÄvalue¸öÊı
 	 * </p>
 	 * 
 	 * @param key
@@ -1727,7 +1727,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyè·å–zsetä¸­valueçš„scoreå€¼
+	 * Í¨¹ıkey»ñÈ¡zsetÖĞvalueµÄscoreÖµ
 	 * </p>
 	 * 
 	 * @param key
@@ -1751,7 +1751,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyåˆ é™¤ç»™å®šåŒºé—´å†…çš„å…ƒç´ 
+	 * Í¨¹ıkeyÉ¾³ı¸ø¶¨Çø¼äÄÚµÄÔªËØ
 	 * </p>
 	 * 
 	 * @param key
@@ -1776,7 +1776,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyåˆ é™¤æŒ‡å®šscoreå†…çš„å…ƒç´ 
+	 * Í¨¹ıkeyÉ¾³ıÖ¸¶¨scoreÄÚµÄÔªËØ
 	 * </p>
 	 * 
 	 * @param key
@@ -1801,13 +1801,13 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * è¿”å›æ»¡è¶³patternè¡¨è¾¾å¼çš„æ‰€æœ‰key
+	 * ·µ»ØÂú×ãpattern±í´ïÊ½µÄËùÓĞkey
 	 * </p>
 	 * <p>
 	 * keys(*)
 	 * </p>
 	 * <p>
-	 * è¿”å›æ‰€æœ‰çš„key
+	 * ·µ»ØËùÓĞµÄkey
 	 * </p>
 	 * 
 	 * @param pattern
@@ -1830,7 +1830,7 @@ public class RedisUtil {
 
 	/**
 	 * <p>
-	 * é€šè¿‡keyåˆ¤æ–­å€¼å¾—ç±»å‹
+	 * Í¨¹ıkeyÅĞ¶ÏÖµµÃÀàĞÍ
 	 * </p>
 	 * 
 	 * @param key
@@ -1852,7 +1852,7 @@ public class RedisUtil {
 	}
 
 	/**
-	 * è¿”è¿˜åˆ°è¿æ¥æ± 
+	 * ·µ»¹µ½Á¬½Ó³Ø
 	 *
 	 * @param pool
 	 * @param jedis
@@ -1864,7 +1864,7 @@ public class RedisUtil {
 	}
 
 	/**
-	 * è¿”è¿˜åˆ°è¿æ¥æ± 
+	 * ·µ»¹µ½Á¬½Ó³Ø
 	 *
 	 * @param pool
 	 * @param jedis
